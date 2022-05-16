@@ -6,7 +6,7 @@ const db = require('../db/connection');
 
 //closes all databases after the test suite has run.
 afterAll(() => {
-    if (db.end) db.end();
+    db.end();
 })
 
 //seeds the test database for utilisation in the tests. 
