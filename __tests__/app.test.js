@@ -4,9 +4,9 @@ const request = require('supertest');
 const app = require('../app');
 const db = require('../db');
 
-// afterAll(() => {
-//     if (db.end) db.end();
-// })
+afterAll(() => {
+    if (db.end) db.end();
+})
 
 beforeEach(() => {
 return seed(testData)

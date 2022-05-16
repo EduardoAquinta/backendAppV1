@@ -8,3 +8,5 @@ const {
 app.use(express.json());
 
 app.get("/api", getMessage);
+
+module.exports = app;
