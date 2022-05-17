@@ -8,6 +8,8 @@ const {
 
 const {getReview, patchVoteCount} = require("./controllers/review-controllers")
 
+const {handlePSQLErrors, handle404Errors, handleUnknownErrors, handle500Errors} = require("./controllers/error-controllers")
+
 app.use(express.json()); 
 
 app.get("/api", getMessage); // a connection to make sure everything is working as it should.
@@ -18,31 +20,19 @@ app.patch("/api/reviews/:review_id", patchVoteCount);// a patch that updates the
 
 
 
-//Error handling suite 
+//Error handling suite - see ./controllers/error-controllers for code. 
 
 //Error handling for status 400
-app.use((error, request, response, next) => {
-    if (error.code ==="22P02") {
-        response.status(400).send({ msg: "bad request"});
-    } else {
-        next(error);
-    }
-})
+app.use(handlePSQLErrors);
 
 //Error handling for status 404
-app.use("/*", (request, response, next) => {
-    response.status(404).send({ msg: "page not found" });
-});
+app.use(handle404Errors);
 
 //Error handling for unknown error messages
-app.use((error, request, response, next) => {
-    response.status(error.status).send( {msg: error.msg });
-});
+app.use(handleUnknownErrors);
 
 //Error handling for status 500
-app.use((error, request, response, next) => {
-    response.status(500).send({ msg: "internal server error" });
-});
+app.use(handle500Errors);
 
 
 module.exports = app;

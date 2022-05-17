@@ -153,7 +153,7 @@ describe("PATCH /api/review/:review_id", () => {
         .then(({ body }) => {
             expect(body.msg).toBe("bad request");
         })
-    })
+    });
     test("Status 400: user passes something not a number in inc_votes", () => { 
         const reviewVoteUpdate = {
             inc_votes: 'dave',
@@ -164,7 +164,19 @@ describe("PATCH /api/review/:review_id", () => {
         .expect(400)
         .then(({ body }) => {
             expect(body.msg).toBe("bad request");
-        })
-    })
+        });
+    });
+    test("Status 404: valid number in path but doesn't match a review.", () => {
+        const reviewVoteUpdate = {
+            inc_votes: 10,
+        }
+        return request(app)
+        .patch("/api/reviews/5654343")
+        .send(reviewVoteUpdate)
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("page not found");
+        });
+    });
     
 });
