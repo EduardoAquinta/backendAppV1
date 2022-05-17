@@ -35,7 +35,6 @@ app.use("/*", (request, response, next) => {
 //Error handling for unknown error messages
 app.use((error, request, response, next) => {
     response.status(error.status).send( {msg: error.msg });
-    console.log({msg: error.msg}, "<---Error Message")
 });
 
 //Error handling for status 500
