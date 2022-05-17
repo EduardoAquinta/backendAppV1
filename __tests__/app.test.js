@@ -3,6 +3,7 @@ const testData = require("../db/data/test-data")
 const request = require('supertest');
 const app = require('../app');
 const db = require('../db/connection');
+const { get } = require("express/lib/response");
 
 //closes all databases after the test suite has run.
 afterAll(() => {
@@ -51,7 +52,7 @@ describe("GET: /api/categories", () => {
         .get("/api/elephant")
         .expect(404)
         .then(({ body }) => {
-            expect(body.msg).toBe("Route not found");
+            expect(body.msg).toBe("page not found");
         });
     });
 });
@@ -61,24 +62,36 @@ describe("GET: /api/categories", () => {
 describe("GET /api/review/:review_id", () => {
     test("status 200: responds with an object with the appropriate properties", () => {
         return request(app)
-        .get("/api/review:review_id")
+        .get("/api/reviews/3")
         .expect(200)
         .then(({ body }) => {
-            const {review} = body;
-            expect(review).toBeInstanceOf(Object);
-            expect(review).toEqual(
-                expect.objectContaining(
-                    {
-                    title: expect.any(String),
-                    designer: expect.any(String),
-                    owner: expect.any(String),
-                    review_img_url: expect.any(String),
-                    category: expect.any(String),
-                    created_at: expect.any(Date),
-                    votes: expect.any(Number),
-                    }
-                )
-            )
+            expect(body.review).toEqual({
+                review_id: 3,
+                title: 'Ultimate Werewolf',
+                category: 'social deduction',
+                designer: 'Akihisa Okui',
+                owner: 'bainesface',
+                review_body: "We couldn't find the werewolf!",
+                review_img_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                created_at: `2021-01-18T10:01:41.251Z`,
+                votes: 5
+            })
+        });
+    });
+    test("status 400: returns a bad request message when an invalid id is passed", () => {
+        return request(app)
+        .get("/api/reviews/elephant")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("bad request")
+        });
+    });
+    test("status 404: returns a page not found message when am inputted review doesnt exist", () => {
+        return request(app)
+        .get("/api/reviews/9898797")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("page not found");
         });
     });
 });

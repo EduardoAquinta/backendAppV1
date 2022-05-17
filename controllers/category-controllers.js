@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-const {selectCategory, selectReview} = require("../models/boardgames-models");
+const {selectCategory} = require("../models/category-models");
 
 //A controller that returns a working OK message
 exports.getMessage = (request, response) => {
@@ -18,9 +18,12 @@ exports.getCategory = (request, response) => {
 };
 
 //A controller for fetching a review inputted in the url by the user
-exports.getReview = (request, response) => {
-    const {review_id} = reqeust.params;
+exports.getReview = (request, response, next) => {
+    const {review_id} = request.params;
     selectReview(review_id).then((review) => {
-        response.status(200).send({ review: review})
+        response.status(200).send({ review });
+    })
+    .catch((error) => {
+        next(error);
     });
 };
