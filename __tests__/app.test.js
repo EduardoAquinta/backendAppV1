@@ -214,12 +214,4 @@ describe("GET /api/users", () => {
             });
         });
     });
-    test("Status 404: the user inputs a page that doesn't exist", () => {
-        return request(app)
-        .get("/api/elephant")
-        .expect(404)
-        .then(({ body }) => {
-            expect(body.msg).toBe("page not found");
-        });
-    });
 });
