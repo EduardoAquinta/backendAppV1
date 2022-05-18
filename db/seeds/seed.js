@@ -103,7 +103,8 @@ const seed = async (data) => {
 
 	const reviewRows = await db
 		.query(insertReviewsQueryStr)
-		.then((result) => result.rows);
+		.then((result) => 
+			result.rows);
 
 	const reviewIdLookup = createRef(reviewRows, "title", "review_id");
 	const formattedCommentData = formatComments(commentData, reviewIdLookup);
