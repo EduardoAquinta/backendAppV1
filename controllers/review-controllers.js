@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-const {selectReview, updateVoteCount} = require("../models/review-model");
+const {selectReview, updateVoteCount, selectCommentCount} = require("../models/review-model");
 
 
 //A controller for fetching a review inputted in the url by the user
@@ -28,3 +28,4 @@ exports.patchVoteCount = (request, response, next) => {
         next(error);
     });
 };
+

@@ -125,6 +125,7 @@ const seed = async (data) => {
 	return db.query(insertCommentsQueryStr).then((result) => {
 		return result.rows;
 	});
+
 };
 
 module.exports = seed;
