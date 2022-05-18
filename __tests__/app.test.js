@@ -85,7 +85,7 @@ describe("GET /api/reviews/:review_id", () => {
             expect(body.msg).toBe("bad request");
         });
     });
-    test("status 404: returns a page not found message when am inputted review doesnt exist", () => {
+    test("status 404: returns a page not found message when an inputted review doesnt exist", () => {
         return request(app)
         .get("/api/reviews/9898797")
         .expect(404)
@@ -191,4 +191,27 @@ describe("PATCH /api/review/:review_id", () => {
         });
    })  
     
+});
+
+//A test battery that ensure that the user endpoint responds with an array the appropirate objects
+describe("GET /api/users", () => {
+    test("status 200: responds with an array of user objects containing username, name and avatar_url", () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then (({ body }) => {
+            const {users} = body;
+            expect(users).toBeInstanceOf(Array);
+            expect(users).toHaveLength(4);
+            users.forEach((user) => {
+                expect(user).toEqual(expect.objectContaining(
+                    {
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String),
+                    }
+                ));
+            });
+        });
+    });
 });
