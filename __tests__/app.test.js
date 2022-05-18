@@ -178,5 +178,17 @@ describe("PATCH /api/review/:review_id", () => {
             expect(body.msg).toBe("page not found");
         });
     });
+    test("Status 400: user passes an empty object in inc_votes ", () => {
+        const reviewVoteUpdate = {
+            
+        }
+        return request(app)
+        .patch("/api/reviews/3")
+        .send(reviewVoteUpdate)
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("bad request");
+        });
+   })  
     
 });

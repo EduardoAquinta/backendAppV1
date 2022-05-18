@@ -7,6 +7,14 @@ exports.handlePSQLErrors = (error, request, response, next) => {
     }
 };
 
+exports.handleNullPSQLError = (error, request, response, next) => {
+    if (error.code === "23502") {
+        response.status(400).send({ msg: "bad request"});
+    } else {
+        next(error);
+    }
+}
+
 //Error handling for status 404
 exports.handle404Errors = ("/*", (request, response, next) => {
     response.status(404).send({ msg: "page not found" });
