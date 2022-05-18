@@ -21,12 +21,10 @@ exports.getReview = (request, response, next) => {
 exports.patchVoteCount = (request, response, next) => {
     const {review_id} = request.params;
     const {inc_votes} = request.body;
-    console.log(review_id, inc_votes);
     updateVoteCount(review_id, inc_votes).then((review) => {
         response.status(200).send({ review })
     })
     .catch((error) => {
-        console.log(error);
         next(error);
     });
 };

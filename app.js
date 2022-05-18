@@ -8,6 +8,8 @@ const {
 
 const {getReview, patchVoteCount} = require("./controllers/review-controllers")//import the review controller functions.
 
+const { getUsers } = require("./controllers/users-controllers")
+
 const {
     handlePSQLErrors,
     handle404Errors,
@@ -21,6 +23,7 @@ app.use(express.json()); //ensure express uses JSON formatting.
 app.get("/api", getMessage); // a connection to make sure everything is working as it should.
 app.get("/api/categories", getCategory); // a connection that returns an array of category objects.
 app.get("/api/reviews/:review_id", getReview); // a connection that returns an object with information about a review of a particular boardgame. 
+app.get("/api/users", getUsers); // a connection that returns an array of user objects.
 
 app.patch("/api/reviews/:review_id", patchVoteCount);// a patch that updates the vote count for a particular review.
 
@@ -33,7 +36,6 @@ app.use(handlePSQLErrors);
 
 //Error handling for null returns from PSQL
 app.use(handleNullPSQLError);
-
 //Error handling for status 404.
 app.use(handle404Errors);
 
