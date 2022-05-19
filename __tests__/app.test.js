@@ -262,3 +262,38 @@ describe("GET: /api/reviews", () => {
         });
     });
 });
+
+//A test battery thats ensures the review_id/comments endpoint returns the correct propeties.
+describe("GET: /api/reviews/:reviews_id/comments", () => {
+    test("Status 200: responds with an array of objects containing the appropriate properties", () => {
+        return request(app)
+        .get("/api/reviews/3/comments")
+        .expect(200)
+        .then(({ body }) => {
+            const {comment} = body;
+            expect(comment).toBeInstanceOf(Array);
+            expect(comment).toHaveLength(3);
+                comment.forEach((comments) => {
+                expect(comments).toEqual(expect.objectContaining(
+                    {
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    review_id: expect.any(Number),
+                    }
+                ))
+            });
+        });
+    });
+    test.only("Status 200: found a review but no comments to show", () => {
+        return request(app)
+        .get("/api/reviews/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.comment).toEqual("msg: no comments on this review")
+
+        })
+    })
+});

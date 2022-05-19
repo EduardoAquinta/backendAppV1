@@ -27,7 +27,19 @@ exports.updateVoteCount = (review_id, inc_votes) => {
 exports.selectAllReview = () => {
     return db.query(`SELECT reviews.review_id, reviews.title, reviews.designer,owner, reviews.review_img_url, reviews.category, reviews.created_at, reviews.votes, COUNT (comments.review_id) ::INT AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id WHERE reviews.review_id = reviews.review_id GROUP BY reviews.review_id  ORDER BY created_at DESC`)
     .then(({ rows }) => {
-        console.log(rows);
         return rows;
     })
 }
+
+exports.selectReviewComment = (review_id) => {
+    return db.query(`SELECT comments.comment_id, comments.created_at, comments.body, comments.votes, comments.review_id, comments.author FROM comments WHERE comments.review_id = $1`, [review_id])
+    .then((result)=> {
+
+        if (!result.rows.length) {
+            return ("msg: no comments on this review");
+        }
+        return result.rows;
+        
+    });
+
+};
