@@ -3,6 +3,7 @@ const testData = require("../db/data/test-data")
 const request = require('supertest');
 const app = require('../app');
 const db = require('../db/connection');
+require("jest-sorted");
 
 //closes all databases after the test suite has run.
 afterAll(() => {
@@ -201,7 +202,7 @@ describe("PATCH /api/review/:review_id", () => {
     
 });
 
-//A test battery that ensure that the user endpoint responds with an array the appropirate objects
+//A test battery that ensures that the user endpoint responds with an array the appropirate objects.
 describe("GET /api/users", () => {
     test("status 200: responds with an array of user objects containing username, name and avatar_url", () => {
         return request(app)
@@ -224,3 +225,40 @@ describe("GET /api/users", () => {
     });
 });
 
+//A test battery thats ensures that the review requests are working correctly, given in date order (descending).
+describe("GET: /api/reviews", () => {
+    test("Status 200: responds with an array of objects containing the appropriate properties", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body}) => {
+            const {reviews} = body;
+            expect(reviews).toBeInstanceOf(Array);
+            expect(reviews).toHaveLength(13);
+            reviews.forEach((review) => {
+                expect(review).toEqual(expect.objectContaining(
+                    {
+                        review_id: expect.any(Number),
+                        title: expect.any(String),
+                        category: expect.any(String),
+                        designer: expect.any(String),
+                        owner: expect.any(String),
+                        review_img_url: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),    
+                        comment_count: expect.any(Number),
+                }
+                ));
+            });
+         });
+    });
+    test("Status 200: responds with an array of objects in descending data order", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body}) => {
+            const {reviews} = body;
+            expect(reviews).toBeSorted({ key: 'created_at', descending: true})
+        });
+    });
+});
