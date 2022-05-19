@@ -64,7 +64,7 @@ describe("GET /api/reviews/:review_id", () => {
         .get("/api/reviews/3")
         .expect(200)
         .then(({ body }) => {
-            expect(body.review).toEqual({
+            expect(body.review).toEqual(expect.objectContaining ({
                 review_id: 3,
                 title: 'Ultimate Werewolf',
                 category: 'social deduction',
@@ -74,9 +74,17 @@ describe("GET /api/reviews/:review_id", () => {
                 review_img_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
                 created_at: `2021-01-18T10:01:41.251Z`,
                 votes: 5
-            })
+            }))
         });
     });
+    test("status 200: returns an object with the additional comment_count property attached, with the correct value", () => {
+        return request(app)
+        .get("/api/reviews/3")
+        .expect(200)
+        .then (({ body }) => {
+            expect(body.review).toHaveProperty("comment_count");
+        })
+    })
     test("status 400: returns a bad request message when an invalid id is passed", () => {
         return request(app)
         .get("/api/reviews/elephant")
@@ -215,3 +223,4 @@ describe("GET /api/users", () => {
         });
     });
 });
+

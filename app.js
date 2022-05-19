@@ -3,10 +3,13 @@ const app = express();
 
 const { 
     getMessage,
-    getCategory, 
+    getCategory
     } = require("./controllers/category-controllers");//import the category controller functions.
 
-const {getReview, patchVoteCount} = require("./controllers/review-controllers")//import the review controller functions.
+const {
+    getReview, 
+    patchVoteCount,
+    } = require("./controllers/review-controllers")//import the review controller functions.
 
 const { getUsers } = require("./controllers/users-controllers")
 
