@@ -9,6 +9,7 @@ const {selectReview, updateVoteCount, selectCommentCount} = require("../models/r
 exports.getReview = (request, response, next) => {
     const {review_id} = request.params;
     selectReview(review_id).then((review) => {
+        console.log(review);
         response.status(200).send({ review });
     })
     .catch((error) => {
