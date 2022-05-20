@@ -97,11 +97,15 @@ exports.insertComment = (username, body, review_id) => {
 }
 
 //A model for deleting comments based on comment_id
-exports.removeCommentById = (comment_id) => {
+exports.removeCommentById = async (comment_id) => {
     console.log(comment_id, "<--- model input")
-    return db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [comment_id])
-    .then((result) => {
-        console.log(result.rows, "<--- model output")
-        return result.rows;
-    });
+
+    const removeComment = await db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [comment_id]);
+   
+
+    if (removeComment.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "page not found"})
+    }
+        console.log(removeComment.rows, "<--- model output")
+        return removeComment.rows;
 };
