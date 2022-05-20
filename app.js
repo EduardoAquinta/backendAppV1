@@ -9,7 +9,8 @@ const {
 const {
     getReview, 
     patchVoteCount,
-    getAllReviews
+    getAllReviews,
+    getReviewComment
     } = require("./controllers/review-controllers")//import the review controller functions.
 
 const { getUsers } = require("./controllers/users-controllers")
@@ -29,6 +30,7 @@ app.get("/api/categories", getCategory); // a connection that returns an array o
 app.get("/api/reviews/:review_id", getReview); // a connection that returns an object with information about a review of a particular boardgame. 
 app.get("/api/users", getUsers); // a connection that returns an array of user objects.
 app.get("/api/reviews", getAllReviews); // a connection that returns an array of review objects.
+app.get("/api/reviews/:review_id/comments", getReviewComment)// a connection that returns and array of comments related to a review. 
 
 app.patch("/api/reviews/:review_id", patchVoteCount);// a patch that updates the vote count for a particular review.
 

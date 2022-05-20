@@ -27,7 +27,22 @@ exports.updateVoteCount = (review_id, inc_votes) => {
 exports.selectAllReview = () => {
     return db.query(`SELECT reviews.review_id, reviews.title, reviews.designer,owner, reviews.review_img_url, reviews.category, reviews.created_at, reviews.votes, COUNT (comments.review_id) ::INT AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id WHERE reviews.review_id = reviews.review_id GROUP BY reviews.review_id  ORDER BY created_at DESC`)
     .then(({ rows }) => {
-        console.log(rows);
         return rows;
     })
 }
+
+exports.selectReviewComment = async (review_id) => {
+    const commentResults = await db.query(`SELECT comments.comment_id, comments.created_at, comments.body, comments.votes, comments.review_id, comments.author FROM comments WHERE comments.review_id = $1 `, [review_id])
+        
+        
+    const reviewResults = await db.query(`SELECT reviews.review_id FROM reviews WHERE reviews.review_id = $1`, [review_id]) 
+        
+     if (reviewResults.rows.length === 0){
+        return Promise.reject({ status: 404, msg: "page not found"})
+        }             
+        return (commentResults.rows);
+       
+   
+
+
+};
