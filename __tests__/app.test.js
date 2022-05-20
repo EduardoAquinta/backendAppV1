@@ -284,7 +284,6 @@ describe("GET: /api/reviews", () => {
         .get("/api/reviews?category=social deduction")
         .expect(200)
         .then(({ body }) => {
-            console.log(body.reviews, "<--- test output");
             const categories = body.reviews;
             expect(categories).toBeInstanceOf(Array);
             //expect(categories).toHaveLength(11);
@@ -373,7 +372,7 @@ describe("GET: /api/reviews/:reviews_id/comments", () => {
     })
 });
 
-//A test battery that creates a new comment on a review_id endpoint, with the correct properties
+//A test battery that creates a new comment on a review_id endpoint, with the correct properties.
 describe("POST: /api/review/:review_id/comments", () => {
     test("status 201: posts a new comment with the appropriate properties", () => {
         const newComment = {
@@ -442,4 +441,31 @@ describe("POST: /api/review/:review_id/comments", () => {
             expect(body.msg).toBe("page not found")
         })
     })
+}); 
+
+//A test battery that ensures a comment is removed when a user asks to delete it. 
+describe("DELETE: /api/comments/:comment_id", () => {
+    test("Status 204: no content", () => {
+        return request(app)
+        .delete("/api/comments/2")
+        .expect(204)
+    });
+    test("Status 404: comment_id in path does not exist", () => {
+        return request(app)
+        .delete("/api/comments/65637836")
+        .expect(404)
+        .then(({ body }) => {
+            console.log(body, "<--- 404");
+            expect(body.msg).toBe("page not found")
+        });
+    });
+    test("Status 400: comment_id path is not a number", () => {
+        return request(app)
+        .delete("/api/comments/dave")
+        .expect(400)
+        .then(({ body}) => {
+            console.log(body, "<--- 400")
+            expect(body.msg).toBe("bad request");
+        });
+    });
 }); 

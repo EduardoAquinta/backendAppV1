@@ -39,7 +39,7 @@ app.patch("/api/reviews/:review_id", patchVoteCount);// a patch that updates the
 
 app.post("/api/reviews/:review_id/comments",postComment); //a connection that posts a new comment to the correct review_id
 
-app.delete("/api/comments/comment_id", deleteComment); // a connection that deletes a requested comment via comment_id.
+app.delete("/api/comments/:comment_id", deleteComment); // a connection that deletes a requested comment via comment_id.
 
 
 

@@ -71,6 +71,7 @@ exports.selectAllReview = async (sort_by = "created_at", order = "DESC", categor
     
 };
 
+//A model for fetching selected comments based on review_id
 exports.selectReviewComment = async (review_id) => {
     const commentResults = await db.query(`SELECT comments.comment_id, comments.created_at, comments.body, comments.votes, comments.review_id, comments.author FROM comments WHERE comments.review_id = $1 `, [review_id])
         
@@ -87,9 +88,24 @@ exports.selectReviewComment = async (review_id) => {
 
 };
 
+//A model for insert new comments based on review_id
 exports.insertComment = (username, body, review_id) => {
     return db.query(`INSERT INTO comments (author, body, review_id) VALUES ($1, $2, $3) RETURNING *`, [username, body, review_id])
     .then((result) => {
         return result.rows[0];
     })
 }
+
+//A model for deleting comments based on comment_id
+exports.removeCommentById = async (comment_id) => {
+    console.log(comment_id, "<--- model input")
+
+    const removeComment = await db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [comment_id]);
+   
+
+    if (removeComment.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "page not found"})
+    }
+        console.log(removeComment.rows, "<--- model output")
+        return removeComment.rows;
+};

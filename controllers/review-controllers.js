@@ -3,7 +3,13 @@ const { response } = require("../app");
 const app = express();
 app.use(express.json());
 
-const {selectReview, updateVoteCount, selectAllReview, selectReviewComment, insertComment} = require("../models/review-model");
+const {selectReview, 
+    updateVoteCount, 
+    selectAllReview, 
+    selectReviewComment, 
+    insertComment,
+    removeCommentById
+} = require("../models/review-model");
 
 
 //A controller for fetching a review inputted in the url by the user
@@ -34,13 +40,10 @@ exports.getAllReviews = (request, response, next) => {
     const sort_by = request.query.sort_by;
     const order = request.query.order;
     const category = request.query.category;
-    console.log(sort_by, order, category, "<--- controller input")
     selectAllReview(sort_by, order, category).then((reviews) => {
-        //console.log(reviews, "<--- Controller Output");
         response.status(200).send({ reviews: reviews })
     })
     .catch((error) => {
-        console.log(error);
         next(error);
     })
 }
@@ -67,4 +70,18 @@ exports.postComment = (request, response, next) => {
     .catch((error) => {
         next(error)
     });
+};
+
+//A controller that deletes a comment based on comment_id
+exports.deleteComment = (request, response, next) => {
+    const { comment_id } = request.params;
+    console.log(comment_id, "<--- controller input")
+    removeCommentById(comment_id).then((empty) => {
+        console.log(empty, "<--- controller output")
+        response.status(204).send({empty});
+    })
+    .catch((error) => {
+        console.log(error);
+        next(error);
+    })
 };
