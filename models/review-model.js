@@ -48,10 +48,8 @@ exports.selectReviewComment = async (review_id) => {
 };
 
 exports.insertComment = (username, body, review_id) => {
-    console.log(username, body, review_id, "<--- Model input")
     return db.query(`INSERT INTO comments (author, body, review_id) VALUES ($1, $2, $3) RETURNING *`, [username, body, review_id])
     .then((result) => {
-        console.log(result.rows, "<--- Model output")
         return result.rows[0];
     })
 }

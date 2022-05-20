@@ -52,9 +52,7 @@ exports.postComment = (request, response, next) => {
     const username = request.body.username;
     const body = request.body.body;
     const {review_id} = request.params;
-    console.log(username, body, review_id, "<--- Controller input");
     insertComment(username, body, review_id).then((comment) => {
-        console.log(comment, "<--- Controller Output")
         response.status(201).send ({ comment });
     })
     .catch((error) => {

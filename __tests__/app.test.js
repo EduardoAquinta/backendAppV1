@@ -333,9 +333,21 @@ describe("POST: /api/review/:review_id/comments", () => {
             }));
         });
     });
-    test("Status 400: body does not contain both mandatory keys", () => {
+    test("Status 400: body does not contain a body key", () => {
         const newComment = {
             username: "mallionaire"
+        }
+        return request(app)
+        .post("/api/reviews/3/comments")
+        .send(newComment)
+        .expect(400)
+        .then (({ body }) => {
+            expect(body.msg).toBe("bad request");
+        }); 
+    });
+    test("Status 400: body does not contain a username key", () => {
+        const newComment = {
+            body: "maaa maaaa.... pwwwhhh.... ba!"
         }
         return request(app)
         .post("/api/reviews/3/comments")
