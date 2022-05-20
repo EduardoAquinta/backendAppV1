@@ -30,9 +30,18 @@ exports.patchVoteCount = (request, response, next) => {
 };
 
 //A controller for fetching all of the reviews held in the database
-exports.getAllReviews = (request, response) => {
-    selectAllReview().then((reviews) => {
+exports.getAllReviews = (request, response, next) => {
+    const sort_by = request.query.sort_by;
+    const order = request.query.order;
+    const category = request.query.category;
+    console.log(sort_by, order, category, "<--- controller input")
+    selectAllReview(sort_by, order, category).then((reviews) => {
+        //console.log(reviews, "<--- Controller Output");
         response.status(200).send({ reviews: reviews })
+    })
+    .catch((error) => {
+        console.log(error);
+        next(error);
     })
 }
 
@@ -56,7 +65,6 @@ exports.postComment = (request, response, next) => {
         response.status(201).send ({ comment });
     })
     .catch((error) => {
-        console.log(error);
         next(error)
     });
 };

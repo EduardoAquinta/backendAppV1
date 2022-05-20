@@ -24,12 +24,52 @@ exports.updateVoteCount = (review_id, inc_votes) => {
 };
 
 //A model for fetching all the reviews from the database, in decending date order.
-exports.selectAllReview = () => {
-    return db.query(`SELECT reviews.review_id, reviews.title, reviews.designer,owner, reviews.review_img_url, reviews.category, reviews.created_at, reviews.votes, COUNT (comments.review_id) ::INT AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id WHERE reviews.review_id = reviews.review_id GROUP BY reviews.review_id  ORDER BY created_at DESC`)
-    .then(({ rows }) => {
-        return rows;
-    })
-}
+exports.selectAllReview = async (sort_by = "created_at", order = "DESC", category) => {
+
+    const validSortBy = ["created_at", "title", "designer", "owner", "review_img_url", "review_body", "category", "votes" ]
+    const validOrder = ["DESC", "ASC"]
+    const validCategory = await db.query("SELECT slug FROM categories GROUP BY categories.slug")
+
+
+    const validCategoryRows = validCategory.rows;
+    let categoryList = validCategoryRows.map(category => category.slug);
+
+       
+    let queryStr = "SELECT reviews.review_id, reviews.title, reviews.designer,owner, reviews.review_img_url, reviews.category, reviews.created_at, reviews.votes, COUNT (comments.review_id) ::INT AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id"
+   
+
+
+    if (categoryList.includes(category) && category) {
+        queryStr += ` WHERE category = '${category}'`
+    }  
+    else {
+        if(!categoryList.includes(category) && category) {
+         return Promise.reject({ status: 404, msg: "page not found"})}
+    };
+
+
+    queryStr += ` GROUP BY reviews.review_id`
+
+
+    if (validSortBy.includes(sort_by)) {
+        queryStr += ` ORDER BY ${sort_by}`;
+    }
+    if (!validSortBy.includes(sort_by))  {
+        return Promise.reject({ status: 400, msg: "bad request"})
+    };
+
+
+    if (validOrder.includes(order)) {
+        queryStr += ` ${order}`
+    }
+    if (!validOrder.includes(order)) {
+        return Promise.reject({ status: 400, msg: "bad request"});
+    };
+
+    const reviewResults = await db.query(queryStr)
+        return reviewResults.rows;
+    
+};
 
 exports.selectReviewComment = async (review_id) => {
     const commentResults = await db.query(`SELECT comments.comment_id, comments.created_at, comments.body, comments.votes, comments.review_id, comments.author FROM comments WHERE comments.review_id = $1 `, [review_id])
