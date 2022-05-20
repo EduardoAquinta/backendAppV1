@@ -37,14 +37,9 @@ exports.selectReviewComment = async (review_id) => {
         
     const reviewResults = await db.query(`SELECT reviews.review_id FROM reviews WHERE reviews.review_id = $1`, [review_id]) 
         
-    console.log(commentResults.rows.length, "<--- result1 length");
-    console.log(reviewResults.rows.length, "<--- reviewResults rows length")
-
-
-    if (reviewResults.rows.length === 0){
+     if (reviewResults.rows.length === 0){
         return Promise.reject({ status: 404, msg: "page not found"})
-        }
-             
+        }             
         return (commentResults.rows);
        
    
