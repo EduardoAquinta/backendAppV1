@@ -31,15 +31,21 @@ exports.selectAllReview = () => {
     })
 }
 
-exports.selectReviewComment = (review_id) => {
-    return db.query(`SELECT comments.comment_id, comments.created_at, comments.body, comments.votes, comments.review_id, comments.author FROM comments WHERE comments.review_id = $1`, [review_id])
-    .then((result)=> {
-
-        if (!result.rows.length) {
-            return ("msg: no comments on this review");
-        }
-        return result.rows;
+exports.selectReviewComment = async (review_id) => {
+    const result = await db.query(`SELECT comments.comment_id, comments.created_at, comments.body, comments.votes, comments.review_id, comments.author FROM comments WHERE comments.review_id = $1 `, [review_id])
         
-    });
+        
+    const result2 = await db.query(`SELECT reviews.review_id FROM reviews GROUP BY reviews.review_id`) 
+        
+         
+    if (review_id > result2.rowCount){
+        return Promise.reject({ status: 404, msg: "page not found"})
+        }
 
+    if (!result.rows.length) {
+        return ([]);
+       }            
+      
+        return (result.rows)
+            
 };

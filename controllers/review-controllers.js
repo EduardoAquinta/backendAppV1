@@ -40,7 +40,6 @@ exports.getAllReviews = (request, response) => {
 exports.getReviewComment = (request, response, next) => {
     const {review_id} = request.params;
     selectReviewComment(review_id).then((comment) => {
-        console.log(Object.keys(comment));
         response.status(200).send({ comment });
     })
     .catch((error) => {

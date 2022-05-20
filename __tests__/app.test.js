@@ -287,13 +287,29 @@ describe("GET: /api/reviews/:reviews_id/comments", () => {
             });
         });
     });
-    test.only("Status 200: found a review but no comments to show", () => {
+    test("Status 200: found a review but no comments to show", () => {
         return request(app)
         .get("/api/reviews/1/comments")
         .expect(200)
         .then(({ body }) => {
-            expect(body.comment).toEqual("msg: no comments on this review")
+            expect(body.comment).toEqual([])
 
+        })
+    })
+    test("Status 400: something not a number passed as the id in path", () => {
+        return request(app)
+        .get("/api/reviews/shoes/comments")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("bad request");
+        })
+    })
+    test("Status 404: valid number but not a number that matches an id in path", () => {
+        return request(app)
+        .get("/api/reviews/4152547/comments")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("page not found");
         })
     })
 });
