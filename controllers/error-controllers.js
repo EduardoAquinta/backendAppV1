@@ -7,9 +7,19 @@ exports.handlePSQLErrors = (error, request, response, next) => {
     }
 };
 
+//Error hanlding for Null PSQL errors
 exports.handleNullPSQLError = (error, request, response, next) => {
     if (error.code === "23502") {
         response.status(400).send({ msg: "bad request"});
+    } else {
+        next(error);
+    }
+}
+
+//Error handling for undefined key values in a POST PSQL request
+exports.handleUndefinedKeyValues = (error, request, response, next) => {
+    if (error.code === "23503") {
+        response.status(404).send({ msg: "page not found"});
     } else {
         next(error);
     }
@@ -29,3 +39,4 @@ exports.handleUnknownErrors = ((error, request, response, next) => {
 exports.handle500Errors = ((error, request, response, next) => {
     response.status(500).send({ msg: "internal server error" });
 });
+

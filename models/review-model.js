@@ -23,7 +23,7 @@ exports.updateVoteCount = (review_id, inc_votes) => {
     });
 };
 
-//A model for fetchig all the reviews from the database, in decending date order.
+//A model for fetching all the reviews from the database, in decending date order.
 exports.selectAllReview = () => {
     return db.query(`SELECT reviews.review_id, reviews.title, reviews.designer,owner, reviews.review_img_url, reviews.category, reviews.created_at, reviews.votes, COUNT (comments.review_id) ::INT AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id WHERE reviews.review_id = reviews.review_id GROUP BY reviews.review_id  ORDER BY created_at DESC`)
     .then(({ rows }) => {
@@ -46,3 +46,12 @@ exports.selectReviewComment = async (review_id) => {
 
 
 };
+
+exports.insertComment = (username, body, review_id) => {
+    console.log(username, body, review_id, "<--- Model input")
+    return db.query(`INSERT INTO comments (author, body, review_id) VALUES ($1, $2, $3) RETURNING *`, [username, body, review_id])
+    .then((result) => {
+        console.log(result.rows, "<--- Model output")
+        return result.rows[0];
+    })
+}

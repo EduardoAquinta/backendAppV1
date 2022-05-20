@@ -3,7 +3,7 @@ const { response } = require("../app");
 const app = express();
 app.use(express.json());
 
-const {selectReview, updateVoteCount, selectAllReview, selectReviewComment} = require("../models/review-model");
+const {selectReview, updateVoteCount, selectAllReview, selectReviewComment, insertComment} = require("../models/review-model");
 
 
 //A controller for fetching a review inputted in the url by the user
@@ -46,3 +46,19 @@ exports.getReviewComment = (request, response, next) => {
         next(error);
     })
 }
+
+// Acontroller that posts a new comment the request review_id
+exports.postComment = (request, response, next) => {
+    const username = request.body.username;
+    const body = request.body.body;
+    const {review_id} = request.params;
+    console.log(username, body, review_id, "<--- Controller input");
+    insertComment(username, body, review_id).then((comment) => {
+        console.log(comment, "<--- Controller Output")
+        response.status(201).send ({ comment });
+    })
+    .catch((error) => {
+        console.log(error);
+        next(error)
+    });
+};
