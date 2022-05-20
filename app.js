@@ -11,7 +11,8 @@ const {
     patchVoteCount,
     getAllReviews,
     getReviewComment,
-    postComment
+    postComment,
+    deleteComment
     } = require("./controllers/review-controllers")//import the review controller functions.
 
 const { getUsers } = require("./controllers/users-controllers")
@@ -38,28 +39,23 @@ app.patch("/api/reviews/:review_id", patchVoteCount);// a patch that updates the
 
 app.post("/api/reviews/:review_id/comments",postComment); //a connection that posts a new comment to the correct review_id
 
+app.delete("/api/comments/comment_id", deleteComment); // a connection that deletes a requested comment via comment_id.
 
 
 
-//Error handling suite - see ./controllers/error-controllers for code. 
 
-//Error handling for status 400.
-app.use(handlePSQLErrors);
+//Error handling suite - see ./controllers/error-controllers for further code. 
 
-//Error handling for null returns from PSQL
-app.use(handleNullPSQLError);
+app.use(handlePSQLErrors); //Error handling for status 400.
 
-//Error for handling undefined POST keys values
-app.use(handleUndefinedKeyValues);
+app.use(handleNullPSQLError); //Error handling for null returns from PSQL
 
-//Error handling for status 404.
-app.use(handle404Errors);
+app.use(handleUndefinedKeyValues);//Error for handling undefined POST keys values
 
-//Error handling for unknown error messages.
-app.use(handleUnknownErrors);
+app.use(handle404Errors); //Error handling for status 404.
 
-//Error handling for status 500.
-app.use(handle500Errors);
+app.use(handleUnknownErrors); //Error handling for unknown error messages.
 
-//export the app functionality to for other files to use. 
-module.exports = app;
+app.use(handle500Errors); //Error handling for status 500.
+
+module.exports = app; //export the app functionality to for other files to use. 

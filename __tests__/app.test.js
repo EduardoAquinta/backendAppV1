@@ -252,13 +252,72 @@ describe("GET: /api/reviews", () => {
             });
          });
     });
-    test("Status 200: responds with an array of objects in descending data order", () => {
+    test("Status 200: responds with an array of objects in descending date order", () => {
         return request(app)
         .get("/api/reviews")
         .expect(200)
         .then(({ body}) => {
             const {reviews} = body;
             expect(reviews).toBeSorted({ key: 'created_at', descending: true})
+        });
+    });
+    test("Status 200: responds with an array of objects that are sorted by column, with date as the default", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body }) => {
+            const {reviews} = body;
+            expect(reviews).toBeSorted({ key: 'created_at', descending: true})
+        });
+    });
+    test("Status 200 :responds with an array of objects that are sorted by ascending date when user requests this", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=owner&order=ASC")
+        .expect(200)
+        .then(({ body }) => {
+            const {reviews} = body;
+            expect(reviews).toBeSorted({ key: 'owner', ascending: true})
+        });
+    });
+    test("Status 200: responds with an array of objects that are filtered by the topic value specified in the query", () => {
+        return request(app)
+        .get("/api/reviews?category=social deduction")
+        .expect(200)
+        .then(({ body }) => {
+            console.log(body.reviews, "<--- test output");
+            const categories = body.reviews;
+            expect(categories).toBeInstanceOf(Array);
+            //expect(categories).toHaveLength(11);
+            categories.forEach((category) => {
+                expect(category).toEqual(expect.objectContaining(
+                {
+                category: "social deduction"
+                }));
+            });
+        });
+    });
+    test("Status 400: user tries to enter a non-valid sort_by query", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=shoe")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("bad request");
+        });
+    });
+    test("Status 400: user tries to enter a non-valid order query", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=owner&&order=shoes")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("bad request");
+        });
+    });
+    test("Status 404: user tries to enter a non-existant category", () => {
+        return request(app)
+        .get("/api/reviews?category=shoe")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("page not found");
         });
     });
 });
