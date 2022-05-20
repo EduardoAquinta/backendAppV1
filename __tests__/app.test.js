@@ -313,3 +313,74 @@ describe("GET: /api/reviews/:reviews_id/comments", () => {
         })
     })
 });
+
+//A test battery that creates a new comment on a review_id endpoint, with the correct properties
+describe("POST: /api/review/:review_id/comments", () => {
+    test("status 201: posts a new comment with the appropriate properties", () => {
+        const newComment = {
+            username: "mallionaire",
+            body: "maaa maaaa.... pwwwhhh.... ba!"
+        }
+        return request(app)
+        .post("/api/reviews/3/comments")
+        .send(newComment)
+        .expect(201)
+        .then (({ body}) => {
+            expect(body.comment).toEqual(expect.objectContaining({
+                review_id: 3,
+                author: "mallionaire",
+                body: "maaa maaaa.... pwwwhhh.... ba!"
+            }));
+        });
+    });
+    test("Status 400: body does not contain a body key", () => {
+        const newComment = {
+            username: "mallionaire"
+        }
+        return request(app)
+        .post("/api/reviews/3/comments")
+        .send(newComment)
+        .expect(400)
+        .then (({ body }) => {
+            expect(body.msg).toBe("bad request");
+        }); 
+    });
+    test("Status 400: body does not contain a username key", () => {
+        const newComment = {
+            body: "maaa maaaa.... pwwwhhh.... ba!"
+        }
+        return request(app)
+        .post("/api/reviews/3/comments")
+        .send(newComment)
+        .expect(400)
+        .then (({ body }) => {
+            expect(body.msg).toBe("bad request");
+        }); 
+    });
+    test("Status 404: review_id path does not exist", () => {
+        const newComment = {
+            username: "mallionaire",
+            body: "maaa maaaa.... pwwwhhh.... ba!"
+        }
+        return request(app)
+        .post("/api/reviews/12132546/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("page not found");
+        });
+    });
+    test("Status 404: user not in the database tries to post", () => {
+        const newComment = {
+            username: "eden",
+            body: "maaa maaaa.... pwwwhhh.... ba!"
+        }
+        return request(app)
+        .post("/api/reviews/3/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("page not found")
+        })
+    })
+}); 

@@ -10,7 +10,8 @@ const {
     getReview, 
     patchVoteCount,
     getAllReviews,
-    getReviewComment
+    getReviewComment,
+    postComment
     } = require("./controllers/review-controllers")//import the review controller functions.
 
 const { getUsers } = require("./controllers/users-controllers")
@@ -20,7 +21,8 @@ const {
     handle404Errors,
     handleUnknownErrors, 
     handle500Errors,
-    handleNullPSQLError
+    handleNullPSQLError,
+    handleUndefinedKeyValues
     } = require("./controllers/error-controllers") //import the error handling functions. 
 
 app.use(express.json()); //ensure express uses JSON formatting.
@@ -34,6 +36,9 @@ app.get("/api/reviews/:review_id/comments", getReviewComment)// a connection tha
 
 app.patch("/api/reviews/:review_id", patchVoteCount);// a patch that updates the vote count for a particular review.
 
+app.post("/api/reviews/:review_id/comments",postComment); //a connection that posts a new comment to the correct review_id
+
+
 
 
 //Error handling suite - see ./controllers/error-controllers for code. 
@@ -43,6 +48,10 @@ app.use(handlePSQLErrors);
 
 //Error handling for null returns from PSQL
 app.use(handleNullPSQLError);
+
+//Error for handling undefined POST keys values
+app.use(handleUndefinedKeyValues);
+
 //Error handling for status 404.
 app.use(handle404Errors);
 
