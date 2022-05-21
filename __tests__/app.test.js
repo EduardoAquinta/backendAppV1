@@ -1,3 +1,4 @@
+//The importing of all the required functions and databases for the test suite.
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data")
 const request = require('supertest');
@@ -469,7 +470,7 @@ describe("DELETE: /api/comments/:comment_id", () => {
     });
 }); 
 
-//A test battery that ensures a JSON object containing informaion about all the endpoints is returned when looking at the /api endpoint.
+//A test that ensures a JSON object containing informaion about all the endpoints is returned when looking towards the /api endpoint.
 describe("GET: /api", () => {
     test("Status 200: the api endpoint list is returned", () => {
         return request(app)

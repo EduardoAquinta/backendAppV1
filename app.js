@@ -1,5 +1,9 @@
 const express = require("express"); //import and utilise the 'Express' module.
 const app = express();
+app.use(express.json()); //ensure express uses JSON formatting.
+
+
+//The importing of the varius functions required for the endpoints utility.
 
 const { 
     getMessage,
@@ -15,7 +19,7 @@ const {
     deleteComment
     } = require("./controllers/review-controllers")//import the review controller functions.
 
-const { getUsers } = require("./controllers/users-controllers")
+const { getUsers } = require("./controllers/users-controllers")// import the user endpoint controller function.
 
 const {
     handlePSQLErrors,
@@ -30,7 +34,10 @@ const {
     getEndpoints
     } = require("./controllers/endpoint-controller")//import the endpoint infomation controller function. 
 
+
     
+
+//The endpoint utilities.
 
 app.use(express.json()); //ensure express uses JSON formatting.
 
