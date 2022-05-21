@@ -60,7 +60,6 @@ describe("GET: /api/categories", () => {
 });
 
 //A test battery that ensures the review_id endpoint requests are correctly returned, with appropriate error messaging tests. 
-
 describe("GET /api/reviews/:review_id", () => {
     test("status 200: responds with an object with the appropriate properties", () => {
         return request(app)
@@ -107,7 +106,6 @@ describe("GET /api/reviews/:review_id", () => {
 });
 
 //A test battery that ensures the vote numbers increment or decrement as the user input suggests.
-
 describe("PATCH /api/review/:review_id", () => {
     test("Status 200: votes are altered by the correct positive amount", () => {
         const reviewVoteUpdate = {

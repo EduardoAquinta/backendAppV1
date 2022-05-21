@@ -57,6 +57,8 @@ app.delete("/api/comments/:comment_id", deleteComment); // a connection that del
 app.get("/api", getEndpoints) // a connection that serves up a json representation of all available endpoints.
 
 
+
+
 //Error handling suite - see ./controllers/error-controllers for further code. 
 
 app.use(handlePSQLErrors); //Error handling for status 400.
