@@ -24,6 +24,7 @@
   "homepage": "https://github.com/northcoders/be-nc-games#readme",
   "dependencies": {
     "express": "^4.18.1",
+    "heroku": "^7.33.3",
     "husky": "^7.0.0",
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
