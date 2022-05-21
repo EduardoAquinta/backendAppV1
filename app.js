@@ -26,9 +26,15 @@ const {
     handleUndefinedKeyValues
     } = require("./controllers/error-controllers") //import the error handling functions. 
 
+const {
+    getEndpoints
+    } = require("./controllers/endpoint-controller")//import the endpoint infomation controller function. 
+
+    
+
 app.use(express.json()); //ensure express uses JSON formatting.
 
-app.get("/api", getMessage); // a connection to make sure everything is working as it should.
+app.get("/api/test", getMessage); // a connection to make sure everything is working as it should.
 app.get("/api/categories", getCategory); // a connection that returns an array of category objects.
 app.get("/api/reviews/:review_id", getReview); // a connection that returns an object with information about a review of a particular boardgame. 
 app.get("/api/users", getUsers); // a connection that returns an array of user objects.
@@ -41,7 +47,7 @@ app.post("/api/reviews/:review_id/comments",postComment); //a connection that po
 
 app.delete("/api/comments/:comment_id", deleteComment); // a connection that deletes a requested comment via comment_id.
 
-
+app.get("/api", getEndpoints) // a connection that serves up a json representation of all available endpoints.
 
 
 //Error handling suite - see ./controllers/error-controllers for further code. 

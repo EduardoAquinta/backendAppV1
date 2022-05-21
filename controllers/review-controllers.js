@@ -1,5 +1,4 @@
 const express = require("express");
-const { response } = require("../app");
 const app = express();
 app.use(express.json());
 
@@ -75,13 +74,10 @@ exports.postComment = (request, response, next) => {
 //A controller that deletes a comment based on comment_id
 exports.deleteComment = (request, response, next) => {
     const { comment_id } = request.params;
-    console.log(comment_id, "<--- controller input")
     removeCommentById(comment_id).then((empty) => {
-        console.log(empty, "<--- controller output")
         response.status(204).send({empty});
     })
     .catch((error) => {
-        console.log(error);
         next(error);
     })
 };

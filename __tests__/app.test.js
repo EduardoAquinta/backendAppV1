@@ -4,6 +4,7 @@ const request = require('supertest');
 const app = require('../app');
 const db = require('../db/connection');
 require("jest-sorted");
+const endpoints = require("../endpoints.json");
 
 //closes all databases after the test suite has run.
 afterAll(() => {
@@ -16,10 +17,10 @@ return seed(testData)
 });
 
 //An initial test to ensure the database setup is working correctly. 
-describe ("GET: /api", () => {
+describe ("GET: /api/test", () => {
     test("status 200: returns a message as an JSON object", () => {
         return request(app)
-        .get("/api")
+        .get("/api/test")
         .expect(200)
         .then (({ body }) => {
             expect (body).toEqual({"message" : "all working well"})
@@ -455,7 +456,6 @@ describe("DELETE: /api/comments/:comment_id", () => {
         .delete("/api/comments/65637836")
         .expect(404)
         .then(({ body }) => {
-            console.log(body, "<--- 404");
             expect(body.msg).toBe("page not found")
         });
     });
@@ -464,8 +464,20 @@ describe("DELETE: /api/comments/:comment_id", () => {
         .delete("/api/comments/dave")
         .expect(400)
         .then(({ body}) => {
-            console.log(body, "<--- 400")
             expect(body.msg).toBe("bad request");
         });
     });
 }); 
+
+//A test battery that ensures a JSON object containing informaion about all the endpoints is returned when looking at the /api endpoint.
+describe("GET: /api", () => {
+    test("Status 200: the api endpoint list is returned", () => {
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body }) => {
+            console.log(body);
+            expect(body).toEqual(endpoints);
+        });
+    });
+})
