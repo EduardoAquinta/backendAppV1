@@ -2,7 +2,7 @@
   "name": "be-nc-games",
   "version": "1.0.0",
   "description": "bc-nc-games",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node listen.js",
     "setup-dbs": "psql -f ./db/setup.sql",
