@@ -1,6 +1,8 @@
 const express = require("express"); //import and utilise the 'Express' module.
 const app = express();
 app.use(express.json()); //ensure express uses JSON formatting.
+const cors = require('cors'); //import and enable utilisation of the cors package.
+app.use(cors()); //ensure backend can use Cross Origin Resoures Sharing.
 
 
 //The importing of the varius functions required for the endpoints utility.
